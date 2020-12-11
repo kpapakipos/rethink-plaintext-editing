@@ -35,7 +35,7 @@ function FilesTable({ files, activeFile, setActiveFile }) {
           </tr>
         </thead>
         <tbody>
-          {files.map(file => (
+          {{files.map(file => (
             <tr
               key={file.name}
               className={classNames(
@@ -63,7 +63,7 @@ function FilesTable({ files, activeFile, setActiveFile }) {
                 })}
               </td>
             </tr>
-          ))}
+          ))}}
         </tbody>
       </table>
     </div>
@@ -99,7 +99,7 @@ Previewer.propTypes = {
 
 // Uncomment keys to register editors for media types
 const REGISTERED_EDITORS = {
-  // "text/plain": PlaintextEditor,
+  "text/plain": PlaintextEditor,
   // "text/markdown": MarkdownEditor,
 };
 
@@ -112,10 +112,28 @@ function PlaintextFilesChallenge() {
     setFiles(files);
   }, []);
 
+  const fileIndexNamed = (name) => {
+    files.forEach((f, i) => {
+      if (f.name == name) {
+        return i;
+      }
+    });
+    return -1;
+  };
+
   const write = file => {
-    console.log('Writing soon... ', file.name);
+    console.log('Writing soon... ', file.name, file, files);
 
     // TODO: Write the file to the `files` array
+    if (fileIndexNamed(file.name) == -1) {
+      setFiles(...files, file);
+    }
+    else {
+      const fs = [...files]
+      fs[i] = file;
+      setFiles(fs);
+    }
+    console.log('searchable', files)
   };
 
   const Editor = activeFile ? REGISTERED_EDITORS[activeFile.type] : null;
